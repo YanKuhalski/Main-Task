@@ -1,34 +1,28 @@
 package classes.ItemsForGame;
 
-import interfaces.CardsPointsInDeck;
+import classes.ItemsForGame.cards.Card;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class Deck implements CardsPointsInDeck {
+public class Deck {
     private List<Card> deck = new ArrayList<>();
 
-    public Deck() {
-        for (Integer points : cardPoints)
-            deck.add(new Card(points));
+    public Deck(Collection<Card> cards) {
+        for (Card card : cards)
+            deck.add(new Card(card));
     }
 
     public int checkStatus() {
-        int numberOfCards = 0;
-        for (Card card : deck)
-            numberOfCards = numberOfCards + card.getNumberOfCards();
+        int numberOfCards = deck.size();
         return numberOfCards;
     }
 
-    public int getRandomCard() throws IndexOutOfBoundsException {
-        int points = 0;
-        while (points == 0) {
-            int numberOfCard = (int) (Math.random() * deck.size());
-            points = deck.get(numberOfCard).getCard();
-            if (points == 0) {
-                deck.remove(numberOfCard);
-            }
-        }
-        return points;
+    public Card getRandomCard() throws IndexOutOfBoundsException {
+        int numberOfCard = (int) (Math.random() * deck.size());
+        Card card = deck.get(numberOfCard);
+        deck.remove(numberOfCard);
+        return card;
     }
 }

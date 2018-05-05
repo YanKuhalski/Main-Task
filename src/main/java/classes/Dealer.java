@@ -1,19 +1,30 @@
 package classes;
 
+import classes.ItemsForGame.cards.Card;
 import classes.ItemsForGame.Deck;
 import classes.ItemsForGame.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class Dealer {
-    private Deck deck = new Deck();
-    private int cardInLastRound = 52;
+    private Deck deck;
+    private int cardInLastRound;
     private List<Player> winners = new ArrayList<>();
     private List<Player> players = new ArrayList<>();
 
-    public int giveCard() throws IndexOutOfBoundsException {
-        int card = deck.getRandomCard();
+    public Dealer(Set<Card> cardPoints) {
+        deck = new Deck(cardPoints);
+        cardInLastRound = cardPoints.size();
+    }
+
+    public Card giveCard() {
+        Card card = null;
+        try {
+            card = deck.getRandomCard();
+        } catch (IndexOutOfBoundsException e) {
+        }
         return card;
     }
 
@@ -33,7 +44,7 @@ public class Dealer {
     private void selectTheWinner() {
         boolean allHaveMore = true;
         for (Player player : players) {
-            if (player.getTotalPoint() < 22)
+            if (player.getTotalPoints() < 22)
                 allHaveMore = false;
         }
         boolean winerIsSelected = false;
@@ -42,7 +53,7 @@ public class Dealer {
         while (!winerIsSelected) {
             if (allHaveMore) {
                 for (Player player : players) {
-                    if (player.getTotalPoint() == morepoints) {
+                    if (player.getTotalPoints() == morepoints) {
                         winners.add(player);
                         winerIsSelected = true;
                     }
@@ -50,7 +61,7 @@ public class Dealer {
                 morepoints++;
             } else {
                 for (Player player : players) {
-                    if (player.getTotalPoint() == goodpoints) {
+                    if (player.getTotalPoints() == goodpoints) {
                         winners.add(player);
                         winerIsSelected = true;
                     }
@@ -60,18 +71,8 @@ public class Dealer {
         }
     }
 
-    public void showWinner() {
+    public List<Player> showWinner() {
         selectTheWinner();
-        if (winners.size() == 1) {
-            for (Player winner : winners) {
-                System.out.println("ПОБЕДИТЕЛЬ!!!! ");
-                winner.showTotal();
-            }
-        } else {
-            System.out.println("Ничья (");
-            for (Player winner : winners) {
-                winner.showTotal();
-            }
-        }
+        return winners;
     }
 }
